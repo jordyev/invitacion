@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cumpleaños Valentina - 3 Años</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <!-- Iconos para el reproductor -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & VARIABLES --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        :root {
+            --primary: #7cb342; 
+            --dark: #33691e;    
+            --accent: #fbc02d;  
+            --pop: #ff4081;     
+            --bg-pattern: url('https://i.pinimg.com/originals/91/3c/6e/913c6e44b826f6e1f0e478583495f269.jpg');
+        }
+
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Nunito', sans-serif;
+            background-color: #dcedc8;
+            background-image: var(--bg-pattern);
+            background-size: 160px;
+            animation: bgScroll 60s linear infinite;
+            overflow-x: hidden; color: #444;
+        }
+
+        @keyframes bgScroll { from { background-position: 0 0; } to { background-position: 100% 100%; } }
+
+        /* --- PANTALLA DE BIENVENIDA --- */
+        #welcome-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(124, 179, 66, 0.85); backdrop-filter: blur(10px);
+            display: flex; justify-content: center; align-items: center; z-index: 9999;
+            transition: transform 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            padding: 20px;
+        }
+
+        .welcome-card {
+            background: #fff; width: 100%; max-width: 320px; padding: 40px 20px;
+            border-radius: 30px; text-align: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 8px solid #fff; 
+            transform: rotate(-2deg); position: relative;
+        }
+
+        /* CINTA ADHESIVA */
+        .tape {
+            position: absolute; height: 35px; width: 100px;
+            background-color: rgba(255, 235, 59, 0.8);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); z-index: 10;
+            transform: rotate(-5deg); opacity: 0.9;
+        }
+        .tape::after { 
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(90deg, transparent 50%, rgba(255,255,255,0.3) 50%);
+            background-size: 4px 100%;
+        }
+        .tape-top { top: -15px; left: 50%; transform: translateX(-50%) rotate(2deg); width: 120px; background-color: #ff4081; }
+        .tape-corner { top: -10px; right: -30px; transform: rotate(45deg); width: 80px; background-color: var(--accent); }
+
+        .welcome-card h2 { font-family: 'Fredoka One', cursive; color: var(--dark); font-size: 1.8rem; margin-top: 15px; }
+
+        #open-btn {
+            background: var(--pop); color: white; padding: 15px 45px;
+            font-size: 1.2rem; border: none; border-radius: 50px;
+            cursor: pointer; font-family: 'Fredoka One', cursive;
+            box-shadow: 0 6px 0 #c2185b; margin-top: 15px;
+            animation: pulseBtn 2s infinite;
+        }
+        #open-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #c2185b; }
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        /* --- CONTENIDO PRINCIPAL --- */
+        .main-content {
+            display: none; width: 92%; max-width: 420px; margin: 40px auto;
+            text-align: center; padding: 25px; padding-bottom: 100px;
+            background: #fff;
+            background-image: radial-gradient(#f0f0f0 10%, transparent 11%), radial-gradient(#f0f0f0 10%, transparent 11%);
+            background-size: 20px 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(51, 105, 30, 0.4);
+            position: relative; border: 4px dashed var(--primary);
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive; font-size: 2.8rem; line-height: 1; margin: 10px 0;
+            background: -webkit-linear-gradient(45deg, var(--primary), #009688);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 0px var(--accent));
+        }
+
+        .subtitle { font-family: 'Indie Flower', cursive; font-size: 1.5rem; color: #666; font-weight: bold; margin-bottom: 25px; transform: rotate(-2deg); }
+
+        /* FOTO RANA */
+        .polaroid-wrapper {
+            background: white; padding: 10px 10px 30px 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); transform: rotate(3deg);
+            width: 180px; margin: 0 auto 20px auto; position: relative;
+        }
+        .frog-img { width: 100%; height: 160px; object-fit: cover; border: 2px solid #eee; }
+        .speech-bubble {
+            background: var(--dark); color: white; border-radius: 20px;
+            padding: 10px 15px; position: absolute; top: -20px; right: -60px;
+            width: 140px; font-size: 0.8rem; z-index: 20;
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.2); transform: rotate(-5deg);
+        }
+
+        /* CUENTA REGRESIVA */
+        .countdown-box {
+            background: var(--accent); color: var(--dark); display: inline-block;
+            padding: 10px 20px; border-radius: 5px; font-family: 'Fredoka One', cursive;
+            font-size: 1.2rem; transform: rotate(-1deg);
+            box-shadow: 3px 3px 0 rgba(0,0,0,0.15); margin: 15px 0; border: 2px solid var(--dark);
+        }
+
+        /* --- NUEVO REPRODUCTOR DE VIDEO PERSONALIZADO --- */
+        .video-container {
+            position: relative; margin: 25px 0; padding: 8px;
+            background: var(--primary); border-radius: 12px;
+            transform: rotate(1deg); box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .custom-video-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            background: black;
+            line-height: 0;
+        }
+
+        .custom-video-wrapper video {
+            width: 100%;
+            display: block;
+        }
+
+        /* Botón Play Gigante Central */
+        .big-play-btn {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px; height: 70px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 30px; color: var(--pop);
+            cursor: pointer;
+            z-index: 2;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            animation: pulsePlay 2s infinite;
+        }
+        
+        .big-play-btn:hover { transform: translate(-50%, -50%) scale(1.1); }
+        .custom-video-wrapper.playing .big-play-btn { opacity: 0; pointer-events: none; }
+
+        @keyframes pulsePlay { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); } }
+
+        /* Barra de controles inferior */
+        .video-controls-bar {
+            background: #fff;
+            padding: 10px;
+            border-radius: 0 0 8px 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-top: 2px dashed #ccc;
+        }
+
+        .ctrl-btn {
+            background: none; border: none; font-size: 1.2rem;
+            color: var(--dark); cursor: pointer; padding: 5px;
+            width: 30px;
+        }
+
+        /* Barra de Progreso */
+        .progress-container {
+            flex-grow: 1;
+            height: 10px;
+            background: #eee;
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--pop); /* Barra rosa */
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.8rem;
+            color: #666;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* --- FIN ESTILOS VIDEO --- */
+
+        .details-box {
+            text-align: left; margin-top: 20px;
+            background: rgba(139, 195, 74, 0.1); padding: 15px; border-radius: 15px;
+        }
+        .data-item { display: flex; align-items: center; margin-bottom: 15px; font-size: 1.1rem; }
+        .icon-circle {
+            background: white; width: 45px; height: 45px; border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.4rem; margin-right: 15px;
+            box-shadow: 0 3px 0 rgba(0,0,0,0.1); border: 2px solid var(--primary); flex-shrink: 0;
+        }
+
+        .btn {
+            display: block; width: 100%; padding: 16px; margin-top: 15px;
+            border-radius: 15px; text-decoration: none; font-weight: bold;
+            font-family: 'Nunito', sans-serif; text-transform: uppercase;
+            letter-spacing: 1px; border: none; cursor: pointer;
+            position: relative; overflow: hidden; transition: transform 0.2s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-map { background: #03a9f4; color: white; box-shadow: 0 4px 0 #0277bd; }
+        .btn-wa { background: #00e676; color: white; box-shadow: 0 4px 0 #00a152; }
+        .btn::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine { 0% { left: -100%; } 20% { left: 100%; } 100% { left: 100%; } }
+
+        .audio-btn {
+            position: fixed; bottom: 20px; right: 20px; background: var(--pop); color: white;
+            width: 50px; height: 50px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+            font-size: 1.5rem; box-shadow: 0 5px 15px rgba(255, 64, 129, 0.4); z-index: 100;
+            border: 3px solid white; cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="welcome-screen">
+        <div class="welcome-card">
+            <div class="tape tape-top"></div>
+            <div style="font-size: 4rem; margin-bottom: 10px;">🐸</div>
+            <h2>¡Hola!</h2>
+            <p style="font-family:'Indie Flower'; font-size:1.3rem;">Tengo algo especial para ti...</p>
+            <p style="font-size: 0.9rem; color:#888; margin-top:20px;">(Toca el botón para ver)</p>
+            <button id="open-btn">ABRIR INVITACIÓN</button>
+        </div>
+    </div>
+
+    <div class="main-content" id="main-content">
+        <h1>Valentina</h1>
+        <div class="subtitle">¡Cumple 3 Años!</div>
+
+        <div class="polaroid-wrapper" onclick="frogInteraction()">
+            <div class="tape" style="top:-15px; left:50%; transform:translateX(-50%) rotate(-3deg);"></div>
+            <div class="speech-bubble" id="frog-text">¡Tócar! ✨</div>
+            <img src="valentina.jpeg" class="frog-img" alt="Valentina">
+            <div style="font-family:'Indie Flower'; color:#555; margin-top:5px;">La festejada ❤️</div>
+        </div>
+
+        <div class="countdown-box" id="countdown">Cargando...</div>
+
+        <!-- VIDEO MEJORADO CON CONTROLES PERSONALIZADOS -->
+        <div class="video-container">
+            <div class="tape tape-corner"></div>
+            
+            <!-- Wrapper del video -->
+            <div class="custom-video-wrapper" id="videoWrapper">
+                <!-- Botón Play Gigante -->
+                <div class="big-play-btn" id="bigPlayBtn">
+                    <i class="fas fa-play" style="margin-left:5px;"></i> <!-- Icono Play -->
+                </div>
+
+                <!-- Elemento de Video (sin controls por defecto) -->
+                <video id="birthday-video" playsinline poster="rene.png">
+                    <source src="fin.mp4" type="video/mp4">
+                </video>
+                
+                <!-- Barra de Controles Inferior -->
+                <div class="video-controls-bar">
+                    <button class="ctrl-btn" id="smallPlayBtn"><i class="fas fa-play"></i></button>
+                    
+                    <div class="progress-container" id="progressContainer">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    
+                    <div class="time-display" id="timeDisplay">00:00</div>
+                    <button class="ctrl-btn" id="muteBtn"><i class="fas fa-volume-up"></i></button>
+                </div>
+            </div>
+            <div style="font-family:'Fredoka One'; color:white; margin-top:5px; text-shadow:1px 1px 0 #000;">🎥 No faltes</div>
+        </div>
+        <!-- FIN VIDEO -->
+
+        <div class="details-box">
+            <div class="data-item">
+                <div class="icon-circle">🎂</div>
+                <div><strong>Martes 09 de Diciembre</strong><br><small>¡Falta poco!</small></div>
+            </div>
+            <div class="data-item">
+                <div class="icon-circle">🕒</div>
+                <div><strong>4:00 p.m.</strong><br><small>Hora de la fiesta</small></div>
+            </div>
+            <div class="data-item">
+                <div class="icon-circle">📍</div>
+                <div><strong>Gras "El Dorado"</strong><br><small>Augusto Hilser 1111, Satipo</small></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 25px;">
+            <a href="https://www.google.com/maps/place/Gras+el+dorado/@-11.2614702,-74.6405268,16.4z/data=!4m6!3m5!1s0x910bc1c95f828773:0xa6946353d1521b32!8m2!3d-11.2624044!4d-74.6394482!16s%2Fg%2F11ssxb23_4?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="btn btn-map">🗺️ Ver Mapa</a>
+            <button class="btn btn-wa" onclick="confirmAssist()">🐸 Confirmar por WhatsApp</button>
+        </div>
+
+        <div style="margin-top: 30px; font-family:'Indie Flower'; color:#888;">Te esperamos con muchas ganas<br>- Familia de Valentina -</div>
+    </div>
+
+    <div class="audio-btn" onclick="toggleAudio()" id="audio-icon">🔇</div>
+    <audio id="bg-music" loop>
+        <source src="CUMPLEAÑOS FELIZ (lyrics)  Cumpleaños para niños  Feliz cumpleaños infantil  Canta y Baila.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const DATE_TARGET = new Date(2025, 11, 9, 16, 0, 0).getTime(); 
+        const PHONE = "51921146562"; 
+
+        const welcome = document.getElementById('welcome-screen');
+        const main = document.getElementById('main-content');
+        const audio = document.getElementById('bg-music');
+        const audioIcon = document.getElementById('audio-icon');
+        
+        // --- LOGICA DEL VIDEO PERSONALIZADO ---
+        const video = document.getElementById('birthday-video');
+        const wrapper = document.getElementById('videoWrapper');
+        const bigPlayBtn = document.getElementById('bigPlayBtn');
+        const smallPlayBtn = document.getElementById('smallPlayBtn');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressFill = document.getElementById('progressFill');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const muteBtn = document.getElementById('muteBtn');
+
+        // Función Play/Pause
+        function toggleVideo() {
+            if (video.paused) {
+                video.play();
+                wrapper.classList.add('playing');
+                smallPlayBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                
+                // Pausar música de fondo si empieza el video
+                audio.pause();
+                audioIcon.innerText = "🔇";
+            } else {
+                video.pause();
+                wrapper.classList.remove('playing');
+                smallPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        }
+
+        // Eventos Click
+        bigPlayBtn.addEventListener('click', toggleVideo);
+        smallPlayBtn.addEventListener('click', toggleVideo);
+        video.addEventListener('click', toggleVideo); // Pausar al tocar el video
+
+        // Actualizar Barra de Progreso
+        video.addEventListener('timeupdate', () => {
+            const percent = (video.currentTime / video.duration) * 100;
+            progressFill.style.width = `${percent}%`;
+            
+            // Tiempo
+            let mins = Math.floor(video.currentTime / 60);
+            let secs = Math.floor(video.currentTime % 60);
+            if(secs < 10) secs = '0' + secs;
+            timeDisplay.innerText = `${mins}:${secs}`;
+        });
+
+        // Click en la barra para adelantar/retroceder
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = video.duration;
+            video.currentTime = (clickX / width) * duration;
+        });
+
+        // Cuando termina el video
+        video.addEventListener('ended', () => {
+            wrapper.classList.remove('playing');
+            smallPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
+            progressFill.style.width = '0%';
+            // Volver a poner música de fondo
+            playAudio();
+        });
+
+        // Mute/Unmute Video
+        muteBtn.addEventListener('click', () => {
+            video.muted = !video.muted;
+            muteBtn.innerHTML = video.muted ? '<i class="fas fa-volume-mute"></i>' : '<i class="fas fa-volume-up"></i>';
+        });
+
+        // ------------------------------------
+
+        document.getElementById('open-btn').addEventListener('click', () => {
+            welcome.style.transform = "translateY(-100%) rotate(5deg)";
+            setTimeout(() => {
+                welcome.style.display = 'none';
+                main.style.display = 'block';
+                main.style.opacity = 0;
+                main.style.transform = "translateY(50px)";
+                let opacity = 0; let pos = 50;
+                const appear = setInterval(() => {
+                    opacity += 0.1; pos -= 5;
+                    main.style.opacity = opacity; main.style.transform = `translateY(${pos}px)`;
+                    if(opacity >= 1) clearInterval(appear);
+                }, 30);
+                playAudio();
+                shootConfetti();
+            }, 500);
+        });
+
+        const phrases = ["¡No faltes!", "¡Habrá pastel!", "¡Eres el mejor!", "¡Fiesta Fiesta! 🥳", "🐸☕"];
+        function frogInteraction() {
+            const txt = document.getElementById('frog-text');
+            txt.innerText = phrases[Math.floor(Math.random() * phrases.length)];
+            confetti({ particleCount: 30, spread: 50, origin: { y: 0.4 }, colors: ['#ff4081', '#ffffff', '#ffeb3b'], shapes: ['heart'] });
+        }
+
+        setInterval(() => {
+            const now = new Date().getTime(); const diff = DATE_TARGET - now;
+            const el = document.getElementById("countdown");
+            if (diff < 0) {
+                el.innerHTML = "¡ES HOY! 🎉"; el.style.background = "#ff4081"; el.style.color = "white"; return;
+            }
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            el.innerHTML = `⏳ Faltan: ${d} días y ${h} horas`;
+        }, 1000);
+
+        function playAudio() {
+            audio.volume = 0.5;
+            audio.play().then(() => { audioIcon.innerText = "🔊"; }).catch(() => { console.log("Autoplay bloqueado"); });
+        }
+        function toggleAudio() {
+            if(audio.paused) { audio.play(); audioIcon.innerText = "🔊"; } else { audio.pause(); audioIcon.innerText = "🔇"; }
+        }
+        function confirmAssist() {
+            const msg = "¡Hola! 🐸 Confirmo mi asistencia al cumple de Valentina. ¡Qué linda invitación!";
+            window.open(`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+        function shootConfetti() {
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+        }
+    </script>
+</body>
+</html>
